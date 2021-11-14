@@ -9,7 +9,9 @@ import Register from "./components/auth/Register"
 import { loadUser } from './actions/auth'
 import setAuthToken from './utills/setAuthToken'
 import Dashboard from "./components/Dashboard/Dashboard"
-import CreateProfile from "./components/profile-forms/CreateProfile"
+import CreateProfile from "./components/profile-forms/CreateProfile.js"
+import editprofile from "./components/profile-forms/editprofile"
+
 import PrivateRoute from "./components/routing/PrivateRoute"
 // Redux
 
@@ -52,6 +54,17 @@ const App = () => {
                 element = {
                   <PrivateRoute component = {CreateProfile}/>
                 }/>
+                <Route
+                path = "/dashboard"
+                element = {
+                  <PrivateRoute component = {Dashboard}/>
+                }/>
+                                <Route
+                path = "/edit-profile"
+                element = {
+                  <PrivateRoute component = {editprofile}/>
+                }/>
+
             </Routes>
           </section>
 

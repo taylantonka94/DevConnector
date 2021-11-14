@@ -1,4 +1,5 @@
 import axios from 'axios';
+
 import { setAlert } from './alert';
 
 import {
@@ -11,20 +12,59 @@ import {
 export const getCurrentProfile = () => async dispatch => {
 
     try {
-        axios.defaults.headers.common['x-auth-token'] =localStorage.getItem('token')
+        axios.defaults.headers.common['x-auth-token'] = localStorage.getItem('token')
         const res = await axios.get('/api/profile/me');
-        
+
         dispatch({
-            type:GET_PROFILE,
-            payload:res.data
+            type: GET_PROFILE,
+            payload: res.data
         })
 
     } catch (error) {
         console.log(error.response)
         dispatch({
-            type : PROFILE_ERROR,
-            payload: {msg : error.response.statusText, status : error.response.status}
+            type: PROFILE_ERROR,
+            payload: { msg: error.response.statusText, status: error.response.status }
         })
     }
 
+}
+
+export const createProfile = (FormData, history, edit = false) => async dispatch => {
+    try {
+
+        const config = {
+            headers : {
+                'Content-Type' : 'application/json'
+            }
+        }
+
+        const res = await axios.post('/api/profile',FormData,config);
+
+        dispatch({
+            type:GET_PROFILE,
+            payload:res.data
+        })
+
+        dispatch(setAlert(edit ? 'Profile Updated':"Profile Created"));
+
+        if(!edit){
+            history('/dashboard')
+
+        }
+
+    } catch (error) {
+
+        dispatch({
+            type:PROFILE_ERROR,
+            payload: {msg: error.response.statusText, status: error.response.status}
+        })
+        const errors = error.response.data.errors
+        
+        if (errors) {
+
+            errors.forEach(error => dispatch(setAlert(error.msg, "danger")))
+        }
+
+    }
 }
