@@ -2,7 +2,7 @@ import React, { useState,Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { createProfile } from '../../actions/profile'
-import {Link,useNavigate } from 'react-router-dom'
+import {useNavigate } from 'react-router-dom'
 
 const CreateProfile = ({createProfile}) => {
 

@@ -11,7 +11,10 @@ import setAuthToken from './utills/setAuthToken'
 import Dashboard from "./components/Dashboard/Dashboard"
 import CreateProfile from "./components/profile-forms/CreateProfile.js"
 import editprofile from "./components/profile-forms/editprofile"
-
+import AddExperience from "./components/profile-forms/AddExperience"
+import AddEducation from "./components/profile-forms/AddEducation"
+import Profiles from "./components/profiles/Profiles"
+import Profile from "./components/profile/Profile"
 import PrivateRoute from "./components/routing/PrivateRoute"
 // Redux
 
@@ -49,6 +52,8 @@ const App = () => {
                 element = {
                   <PrivateRoute component = {Dashboard}/>
                 }/>
+                <Route exact path="/profiles" element={<Profiles />} />
+                <Route exact path="/profile/:id" element={<Profile />} />
                               <Route
                 path = "/create-profile"
                 element = {
@@ -64,6 +69,17 @@ const App = () => {
                 element = {
                   <PrivateRoute component = {editprofile}/>
                 }/>
+                <Route
+                path = "/add-experience"
+                element = {
+                  <PrivateRoute component = {AddExperience}/>
+                }/>
+                                <Route
+                path = "/add-education"
+                element = {
+                  <PrivateRoute component = {AddEducation}/>
+                }/>
+                
 
             </Routes>
           </section>

@@ -1,6 +1,6 @@
 /* eslint-disable default-case */
 /* eslint-disable import/no-anonymous-default-export */
-import { GET_PROFILE,PROFILE_ERROR, CLEAR_PROFILE } from "../actions/types";
+import { GET_PROFILE,PROFILE_ERROR,GET_REPOS, GET_PROFILES,CLEAR_PROFILE,UPDATE_PROFILE, ACCOUNT_DELETED } from "../actions/types";
 
 const initialState = {
     profile: null,
@@ -26,6 +26,13 @@ export default function(state = initialState, action) {
             return {
                 ...state,
                 error:payload,
+                loading:false,
+                profile: null
+            }
+        case UPDATE_PROFILE:
+            return {
+                ...state,
+                profile:payload,
                 loading:false
             }
         case CLEAR_PROFILE:
@@ -34,6 +41,26 @@ export default function(state = initialState, action) {
                 profile : null,
                 repose: [],
                 loading: false
+            }
+        case ACCOUNT_DELETED:
+            return {
+                ...state,
+                profile : null,
+                repose: [],
+                loading: false
+            }
+        case GET_PROFILES:
+            return {
+                ...state,
+                profiles: payload,
+                loading: false
+            }
+
+        case GET_REPOS:
+            return{
+                ...state,
+                loading:false,
+                repos:payload
             }
 
         default:

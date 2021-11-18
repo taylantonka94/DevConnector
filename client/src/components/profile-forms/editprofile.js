@@ -44,7 +44,7 @@ const EditProfile = ({ createProfile, getCurrentProfile, profile: { profile, loa
             instagram: loading || !profile.company ? '' : profile.instagram
 
         })
-    }, []) //loading
+    }, [loading,getCurrentProfile]) //loading
 
     const {
         company,

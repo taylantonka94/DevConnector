@@ -6,6 +6,7 @@ const router = express.Router();
 const User = require("../../models/User")
 const request = require("request")
 const config = require("config")
+const Post = require('../../models/Post')
 
 // @route   GET api/profile/me
 // @desc    Get current users profile
@@ -154,28 +155,31 @@ router.get("/user/:user_id", async (req, res) => {
     }
 })
 
-// @route   Delete api/profile
-// @desc    Delete profile, user& posts
-// @access  Private
 
-router.delete("/", auth,async (req, res) => {
+
+// @route    DELETE api/profile
+// @desc     Delete profile, user & posts
+// @access   Private
+router.delete('/', auth, async (req, res) => {
     try {
-        // @todo -- remove users posts
-
-        // Remove profile
-        await Profile.findOneAndRemove({user:req.user.id})
-        // Remove User
-        await User.findOneAndRemove({_id:req.user.id})
-
-        res.json({msg:"User deleted"})
+      // Remove user posts
+      // Remove profile
+      // Remove user
+      await Promise.all([
+        Post.deleteMany({ user: req.user.id }),
+        Profile.findOneAndRemove({ user: req.user.id }),
+        User.findOneAndRemove({ _id: req.user.id })
+      ]);
+  
+      res.json({ msg: 'User deleted' });
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
     }
+  });
 
 
-    catch (error) {
-        console.log(error.message)
-        res.status(500).send("Server Error")
-    }
-})
+
 
 // @route   PUT api/profile/experience
 // @desc    Add profile experience
@@ -234,24 +238,22 @@ router.put("/experience",[auth,
 // @route   DELETE api/profile/experience/:exp_id
 // @desc    Delete experience from profile
 // @access  Private
-router.delete("/experience/:exp_id",auth,async (req,res)=>{
-    const {exp_id} = req.params
-    
+
+router.delete("/experience/:exp_id", auth, async (req, res) => {
     try {
-        profile = await Profile.findOne({user:req.user.id})
-
-        const response = await profile.experience.remove({_id:exp_id})
-        console.log(response)
-        profile.save()
-        res.status(200).send("Successful")
-
+      const foundProfile = await Profile.findOne({ user: req.user.id });
+   
+      foundProfile.experience = foundProfile.experience.filter(
+        exp => exp._id.toString() !== req.params.exp_id
+      );
+   
+      await foundProfile.save();
+      return res.status(200).json(foundProfile);
     } catch (error) {
-        res.status(500).send("Server Error")
+      console.error(error);
+      return res.status(500).json({ msg: "Server error" });
     }
-
-
-    
-})
+  });
 
 // @route   PUT api/profile/education
 // @desc    Add profile education
@@ -321,7 +323,7 @@ router.put("/education",[auth,
             const response = await profile.education.remove({_id:edu_id})
             console.log(response)
             profile.save()
-            res.status(200).send("Successful")
+            res.status(200).send(profile)
     
         } catch (error) {
             res.status(500).send("Server Error")
