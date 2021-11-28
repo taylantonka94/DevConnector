@@ -153,15 +153,15 @@ router.put("/like/:id",auth,async(req,res) => {
 })
 
 // @route   PUT api/post/unlike/:id
-// @desc    Like a post
+// @desc    unLike a post
 // @access  Private
 
 
 router.delete("/unlike/:id",auth,async(req,res) => {
     try {
-        
+        console.log(req.params.id)
         const post = await Post.findById(req.params.id)
-
+        
         // Check if the post has already been liked
 
         if(post.likes.filter(like => like.user.toString() === req.user.id).length === 0 ){
@@ -171,14 +171,15 @@ router.delete("/unlike/:id",auth,async(req,res) => {
             })
         }
         // Get remove index
-        const removeIndex = post.likes.map(like => {
-            like.user.toString()}).indexOf(req.user.id)
-        
-        
-        post.likes.splice(removeIndex,1)
-        await post.save()
+        post.likes = post.likes.filter(
+            ({ user }) => user.toString() !== req.user.id
+          );
+      
+          await post.save();
+      
+          return res.json(post.likes);
 
-        res.json(post.likes)
+        
 
     } catch (error) {
         console.error(error.message)
