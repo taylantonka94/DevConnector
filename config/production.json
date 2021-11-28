@@ -1,0 +1,6 @@
+{
+    "mongoURI" : "mongodb+srv://taylantutorial:1994Taylan.@cluster0.h7ibq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+    "jwtSecret" : "mysecrettoken",
+    "githubClientId" : "120c830be147da362802",
+    "githubSecret" : "2057dcb71b3cf009f68f0d85d37301b02b2eb84d "
+}
